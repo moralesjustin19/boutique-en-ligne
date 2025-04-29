@@ -1,10 +1,22 @@
+<?php
+// Démarrer la session
+session_start();
+
+// Vérifier si l'utilisateur est connecté
+$estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
+$nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Senteurs du Monde</title>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -24,9 +36,23 @@
         </svg>
       </button>
     </form>
-    <div>
-      <a href="#" class="me-3 text-dark"><i class="bi bi-person"></i> Mon Compte</a>
-      <a href="#" class="text-dark"><i class="bi bi-basket"></i> Mon Panier</a>
+    <div class="d-flex align-items-center">
+      <?php if($estConnecte): ?>
+        <div class="dropdown">
+          <button class="btn btn-link dropdown-toggle text-dark text-decoration-none" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person me-1"></i><?php echo htmlspecialchars($nomUtilisateur); ?>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="profil.php"><i class="bi bi-person-circle me-2"></i>Mon profil</a></li>
+            <li><a class="dropdown-item" href="commandes.php"><i class="bi bi-receipt me-2"></i>Mes commandes</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="deconnexion.php"><i class="bi bi-box-arrow-right me-2"></i>Déconnexion</a></li>
+          </ul>
+        </div>
+      <?php else: ?>
+        <a href="connexion.php" class="me-3 text-dark text-decoration-none"><i class="bi bi-person"></i> Connexion</a>
+      <?php endif; ?>
+      <a href="#" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
     </div>
   </div>
 </nav>
@@ -74,7 +100,7 @@
   </div>
 </div>
 
+<!-- Bootstrap JS Bundle with Popper (doit être en bas du body) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </body>
 </html>
