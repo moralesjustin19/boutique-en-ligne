@@ -1,0 +1,76 @@
+.navbar-custom {
+    background-color: #232F3E;
+  }
+  .navbar-custom .nav-link {
+    color: white;
+    font-weight: bold;
+  }
+  .carousel-item img {
+    object-fit: cover;
+    height: 500px;
+  }
+  .info-bar {
+    background-color: #232F3E;
+    color: white;
+    padding: 10px 0;
+  }
+  .info-bar i {
+    margin-right: 5px;
+  }
+  .search-bar {
+    width: 300px;
+  }
+  
+a.text-dark,
+a.text-dark:focus,
+a.text-dark:hover,
+a.text-dark:active {
+    text-decoration: none !important;
+}
+
+
+/* Footer */
+.footer-custom {
+    background-color: #232F3E;
+    color: white;
+}
+
+.footer-custom h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-custom ul {
+    padding: 0;
+    list-style: none;
+}
+
+.footer-custom ul li {
+    margin-bottom: 10px;
+}
+
+.footer-custom ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-custom ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-custom i {
+    margin-right: 8px;
+}
+
+.footer-custom .bi-facebook:hover {
+    color: #3b5998;
+}
+
+.footer-custom .bi-instagram:hover {
+    color: #e4405f;
+}
+
+.footer-custom .bi-twitter:hover {
+    color: #1da1f2;
+}
+
