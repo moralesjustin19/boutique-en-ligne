@@ -55,10 +55,10 @@ if (isset($_GET['q'])) {
     <a class="navbar-brand" href="index.php">
       <img src="assets/logo.png.png" alt="Senteurs du Monde" width="80">
     </a>
-    <form class="d-flex mx-auto search-bar position-relative" id="searchForm" method="GET" action="produit.php">
-      <input class="form-control me-2" type="text" id="searchInput" name="q" placeholder="Rechercher un produit..." autocomplete="off">
-      <div id="autocompleteList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
-</form> 
+    <form class="d-flex mx-auto search-bar position-relative" id="searchForm" method="GET" action="search.php">
+        <input class="form-control me-2" type="text" id="searchInput" name="q" placeholder="Rechercher un produit..." autocomplete="off">
+        <div id="autocompleteList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+    </form> 
     <div class="d-flex align-items-center">
       <?php if($estConnecte): ?>
         <div class="dropdown">
@@ -75,7 +75,7 @@ if (isset($_GET['q'])) {
       <?php else: ?>
         <a href="connexion.php" class="me-3 text-dark text-decoration-none"><i class="bi bi-person"></i> Connexion</a>
       <?php endif; ?>
-      <a href="#" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
+      <a href="panier.php" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
     </div>
   </div>
 </nav>
@@ -96,13 +96,13 @@ if (isset($_GET['q'])) {
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active text-center">
-      <img src="assets/Carrousel1.webp" class="d-block w-100" alt="Parfum 1">
+      <img src="assets/sauvage.jpg" class="d-block w-100" alt="Parfum 1">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/Carrousel2.webp" class="d-block w-100" alt="Parfum 2">
+      <img src="assets/eros.jpg" class="d-block w-100" alt="Parfum 2">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/Carrousel3.jpg" class="d-block w-100" alt="Parfum 3">
+      <img src="assets/scandal.jpg" class="d-block w-100" alt="Parfum 3">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -116,16 +116,21 @@ if (isset($_GET['q'])) {
 <!-- Info Bar -->
 <div class="info-bar text-center">
   <div class="container d-flex justify-content-around flex-wrap">
+    <div class="vr"></div>
     <div><i class="bi bi-gift"></i> Emballage cadeau 1€</div>
+    <div class="vr"></div>
     <div><i class="bi bi-truck"></i> Livraison offerte dès 60€ d'achat</div>
+    <div class="vr"></div>
     <div><i class="bi bi-percent"></i> 5% de remise sur votre prochaine commande</div>
+    <div class="vr"></div>
     <div><i class="bi bi-shield-lock"></i> Paiements sécurisés</div>
   </div>
 </div>
 
 <!-- Mosaïque de produits populaires -->
 <div class="container my-5">
-  <h2 class="text-center mb-4">Produits Populaires</h2>
+  <h2 class="text-center mb-4">Produits populaires</h2>
+  <hr class="hr-blurry">
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <?php
     // Connexion à la base de données
@@ -133,7 +138,7 @@ if (isset($_GET['q'])) {
 
     try {
         // Récupérer les produits populaires (par exemple, les 6 premiers produits)
-        $sql = "SELECT nom, description, prix, image FROM produit ORDER BY date_ajout DESC LIMIT 6";
+        $sql = "SELECT id_produit, nom, description, prix, image FROM produit ORDER BY date_ajout DESC LIMIT 6";
         $stmt = $pdo->query($sql);
 
         while ($produit = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -144,7 +149,7 @@ if (isset($_GET['q'])) {
             echo '      <h5 class="card-title">' . htmlspecialchars($produit['nom']) . '</h5>';
             echo '      <p class="card-text">' . htmlspecialchars($produit['description']) . '</p>';
             echo '      <p class="card-text fw-bold">' . number_format($produit['prix'], 2, ',', ' ') . ' €</p>';
-            echo '      <a href="#" class="btn btn-primary">Ajouter au panier</a>';
+            echo '      <a href="ajouter_panier.php?id_produit=' . $produit['id_produit'] . '" class="btn btn-primary">Ajouter au panier</a>';
             echo '    </div>';
             echo '  </div>';
             echo '</div>';
@@ -157,7 +162,8 @@ if (isset($_GET['q'])) {
 
   <!-- Tous les produits -->
 <div class="container my-5">
-  <h2 class="text-center mb-4">Tous Nos Produits</h2>
+  <h2 class="text-center mb-4">Tous nos produits</h2>
+  <hr class="hr-blurry">
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <?php
     // Connexion à la base de données
@@ -165,7 +171,7 @@ if (isset($_GET['q'])) {
 
     try {
         // Récupérer tous les produits
-        $sql = "SELECT nom, description, prix, image FROM produit";
+        $sql = "SELECT id_produit, nom, description, prix, image FROM produit";
         $stmt = $pdo->query($sql);
 
         while ($produit = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -176,7 +182,7 @@ if (isset($_GET['q'])) {
             echo '      <h5 class="card-title">' . htmlspecialchars($produit['nom']) . '</h5>';
             echo '      <p class="card-text">' . htmlspecialchars($produit['description']) . '</p>';
             echo '      <p class="card-text fw-bold">' . number_format($produit['prix'], 2, ',', ' ') . ' €</p>';
-            echo '      <a href="#" class="btn btn-primary">Ajouter au panier</a>';
+            echo '      <a href="ajouter_panier.php?id_produit=' . $produit['id_produit'] . '" class="btn btn-primary">Ajouter au panier</a>';
             echo '    </div>';
             echo '  </div>';
             echo '</div>';

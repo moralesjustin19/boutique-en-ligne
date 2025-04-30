@@ -97,7 +97,9 @@ $productId = isset($_GET['id_produit']) ? intval($_GET['id_produit']) : null; //
                             <h1 class="fw-bold"><?php echo htmlspecialchars($produit['nom']); ?></h1>
                             <p class="text-muted"><?php echo htmlspecialchars($produit['description']); ?></p>
                             <p class="h4 text-primary fw-bold"><?php echo number_format($produit['prix'], 2, ',', ' '); ?> €</p>
-                            <button class="btn btn-dark btn-lg mt-3"><i class="bi bi-cart-plus"></i> Ajouter au panier</button>
+                            <a href="ajouter_panier.php?id_produit=<?php echo $produit['id_produit']; ?>" class="btn btn-dark btn-lg mt-3">
+    <i class="bi bi-cart-plus"></i> Ajouter au panier
+</a>
                         </div>
                     </div>
                 <?php else: ?>
