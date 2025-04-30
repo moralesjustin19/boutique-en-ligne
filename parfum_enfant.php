@@ -52,7 +52,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
       <?php else: ?>
         <a href="connexion.php" class="me-3 text-dark text-decoration-none"><i class="bi bi-person"></i> Connexion</a>
       <?php endif; ?>
-      <a href="#" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
+      <a href="panier.php" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
     </div>
   </div>
 </nav>
@@ -61,6 +61,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
     <div class="container my-5">
         <h1 class="text-center">Parfums pour Enfant</h1>
         <p class="text-center text-muted">Découvrez notre sélection de parfums doux et amusants pour enfants.</p>
+        <hr class="blurred-hr">
     </div>
 
     <!-- Liste des produits -->
@@ -69,7 +70,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
             <?php
             try {
                 // Récupérer les parfums pour enfants (sous-catégorie "Enfants")
-                $sql = "SELECT produit.nom AS produit_nom, produit.description, produit.prix, produit.image 
+                $sql = "SELECT produit.id_produit, produit.nom AS produit_nom, produit.description, produit.prix, produit.image 
                         FROM produit 
                         INNER JOIN sous_categorie ON produit.id_sous_categorie = sous_categorie.id_sous_categorie 
                         WHERE sous_categorie.nom = 'Enfants'";
@@ -83,7 +84,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
                     echo '      <h5 class="card-title">' . htmlspecialchars($produit['produit_nom']) . '</h5>';
                     echo '      <p class="card-text">' . htmlspecialchars($produit['description']) . '</p>';
                     echo '      <p class="card-text fw-bold">' . number_format($produit['prix'], 2, ',', ' ') . ' €</p>';
-                    echo '      <a href="#" class="btn btn-primary">Ajouter au panier</a>';
+                    echo '      <a href="ajouter_panier.php?id_produit=' . $produit['id_produit'] . '" class="btn btn-primary">Ajouter au panier</a>';
                     echo '    </div>';
                     echo '  </div>';
                     echo '</div>';

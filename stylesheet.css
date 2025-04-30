@@ -12,10 +12,10 @@
     color: white;
     font-weight: bold;
   }
-  .carousel-item img {
-    object-fit: cover;
-    height: 500px;
-  }
+  .carousel-inner img {
+    object-fit: cover; /* Ajuste l'image pour qu'elle remplisse l'espace tout en conservant ses proportions */
+    height: 600px; /* Ajustez la hauteur selon vos besoins */
+}
   .info-bar {
     background-color: #232F3E;
     color: white;
@@ -92,5 +92,21 @@ a.text-dark:active {
 .btn-primary:active {
     background-color: #1d2733 !important; /* Couleur légèrement plus foncée pour le hover */
     border-color: #1d2733 !important;
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Par défaut, la notification est masquée */
+}
+.notification.show {
+    display: block; /* Afficher la notification */
 }
 
