@@ -1,3 +1,10 @@
+:root {
+  --primary-color: #232F3E;
+  --secondary-color: #37475A;
+  --accent-color: #FF9900;
+  --text-color: #FFFFFF;
+}
+
 .navbar-custom {
     background-color: #232F3E;
   }
@@ -72,5 +79,18 @@ a.text-dark:active {
 
 .footer-custom .bi-twitter:hover {
     color: #1da1f2;
+}
+
+/* Modifier la couleur primaire des boutons Bootstrap */
+.btn-primary {
+    background-color: #232F3E !important;
+    border-color: #232F3E !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #1d2733 !important; /* Couleur légèrement plus foncée pour le hover */
+    border-color: #1d2733 !important;
 }
 

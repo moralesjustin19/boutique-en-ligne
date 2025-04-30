@@ -1,10 +1,38 @@
 <?php
-// Démarrer la session
-session_start();
+// Démarrer la session uniquement si elle n'est pas déjà active
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Vérifier si l'utilisateur est connecté
 $estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
 $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
+?>
+
+<?php
+// filepath: c:\wamp64\www\boutique-en-ligne\search.php
+
+// Inclure la configuration de la base de données
+require_once "config.php";
+
+if (isset($_GET['q'])) {
+    $searchTerm = htmlspecialchars($_GET['q']); // Échapper les caractères spéciaux pour éviter les injections XSS
+
+    try {
+        // Requête pour rechercher les produits correspondant au terme
+        $sql = "SELECT id, nom FROM produit WHERE nom LIKE :searchTerm LIMIT 10";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Retourner les résultats au format JSON
+        echo json_encode($results);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Erreur lors de la recherche : ' . $e->getMessage()]);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,15 +55,10 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
     <a class="navbar-brand" href="index.php">
       <img src="assets/logo.png.png" alt="Senteurs du Monde" width="80">
     </a>
-    <form class="d-flex mx-auto search-bar">
-      <input class="form-control me-2" type="search" placeholder="Rechercher..." aria-label="Search">
-      <button class="btn btn-dark" type="submit">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search-heart" viewBox="0 0 16 16">
-        <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018"/>
-        <path d="M13 6.5a6.47 6.47 0 0 1-1.258 3.844q.06.044.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11"/>
-        </svg>
-      </button>
-    </form>
+    <form class="d-flex mx-auto search-bar position-relative" id="searchForm" method="GET" action="produit.php">
+      <input class="form-control me-2" type="text" id="searchInput" name="q" placeholder="Rechercher un produit..." autocomplete="off">
+      <div id="autocompleteList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+</form> 
     <div class="d-flex align-items-center">
       <?php if($estConnecte): ?>
         <div class="dropdown">
@@ -209,5 +232,50 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 
 <!-- Bootstrap JS Bundle with Popper (doit être en bas du body) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const autocompleteList = document.getElementById("autocompleteList");
+
+    searchInput.addEventListener("input", function () {
+        const query = searchInput.value.trim();
+
+        if (query.length > 1) {
+            fetch(`search.php?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    autocompleteList.innerHTML = ""; // Vider la liste précédente
+
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const listItem = document.createElement("a");
+                            listItem.href = `produit.php?id_produit=${item.id_produit}`;
+                            listItem.className = "list-group-item list-group-item-action";
+                            listItem.textContent = item.nom;
+                            autocompleteList.appendChild(listItem);
+                        });
+                    } else {
+                        const noResult = document.createElement("div");
+                        noResult.className = "list-group-item text-muted";
+                        noResult.textContent = "Aucun produit trouvé.";
+                        autocompleteList.appendChild(noResult);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la recherche :", error);
+                });
+        } else {
+            autocompleteList.innerHTML = ""; // Vider la liste si la recherche est vide
+        }
+    });
+
+    // Cacher la liste d'autocomplétion si on clique en dehors
+    document.addEventListener("click", function (e) {
+        if (!autocompleteList.contains(e.target) && e.target !== searchInput) {
+            autocompleteList.innerHTML = "";
+        }
+    });
+});
+</script>
 </body>
 </html>

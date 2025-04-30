@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 29 avr. 2025 à 12:42
+-- Généré le : mer. 30 avr. 2025 à 08:20
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -32,7 +32,15 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `id_categorie` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   PRIMARY KEY (`id_categorie`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `categorie`
+--
+
+INSERT INTO `categorie` (`id_categorie`, `nom`) VALUES
+(1, 'Parfums'),
+(2, 'Coffrets');
 
 -- --------------------------------------------------------
 
@@ -98,7 +106,37 @@ CREATE TABLE IF NOT EXISTS `produit` (
   `id_sous_categorie` int DEFAULT NULL,
   PRIMARY KEY (`id_produit`),
   KEY `id_sous_categorie` (`id_sous_categorie`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `produit`
+--
+
+INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `image`, `stock`, `date_ajout`, `id_sous_categorie`) VALUES
+(1, 'Eau de Toilette Homme', 'Un parfum frais et boisé pour hommes.', 49.99, 'eau_de_toilette_homme.jpg', 50, '2025-04-30 09:33:35', 1),
+(2, 'Parfum Intense Homme', 'Un parfum intense et sophistiqué pour hommes.', 69.99, 'parfum_intense_homme.jpg', 30, '2025-04-30 09:33:35', 1),
+(3, 'Eau de Parfum Femme', 'Un parfum floral et élégant pour femmes.', 59.99, 'eau_de_parfum_femme.jpg', 40, '2025-04-30 09:33:35', 2),
+(4, 'Parfum Luxe Femme', 'Un parfum de luxe avec des notes fruitées.', 89.99, 'parfum_luxe_femme.jpg', 20, '2025-04-30 09:33:35', 2),
+(5, 'Eau de Cologne Enfant', 'Un parfum doux et léger pour enfants.', 29.99, 'eau_de_cologne_enfant.jpg', 60, '2025-04-30 09:33:35', 3),
+(6, 'Parfum Fruité Enfant', 'Un parfum fruité et amusant pour enfants.', 34.99, 'parfum_fruite_enfant.jpg', 50, '2025-04-30 09:33:35', 3),
+(7, 'Coffret Cadeau Homme', 'Un coffret contenant un parfum et un gel douche.', 79.99, 'coffret_cadeau_homme.jpg', 25, '2025-04-30 09:33:35', 4),
+(8, 'Coffret Luxe Homme', 'Un coffret de luxe avec parfum et accessoires.', 119.99, 'coffret_luxe_homme.jpg', 15, '2025-04-30 09:33:35', 4),
+(9, 'Coffret Cadeau Femme', 'Un coffret contenant un parfum et une crème.', 89.99, 'coffret_cadeau_femme.jpg', 20, '2025-04-30 09:33:35', 5),
+(10, 'Coffret Luxe Femme', 'Un coffret de luxe avec parfum et accessoires.', 129.99, 'coffret_luxe_femme.jpg', 10, '2025-04-30 09:33:35', 5),
+(11, 'Coffret Parfum Enfant', 'Un coffret contenant un parfum et un jouet.', 49.99, 'coffret_parfum_enfant.jpg', 30, '2025-04-30 09:33:35', 6),
+(12, 'Coffret Cadeau Enfant', 'Un coffret amusant avec parfum et accessoires.', 59.99, 'coffret_cadeau_enfant.jpg', 25, '2025-04-30 09:33:35', 6),
+(13, 'Eau de Toilette Homme', 'Un parfum frais et boisé pour hommes.', 49.99, 'eau_de_toilette_homme.jpg', 50, '2025-04-30 09:33:35', 1),
+(14, 'Parfum Intense Homme', 'Un parfum intense et sophistiqué pour hommes.', 69.99, 'parfum_intense_homme.jpg', 30, '2025-04-30 09:33:35', 1),
+(15, 'Eau de Parfum Femme', 'Un parfum floral et élégant pour femmes.', 59.99, 'eau_de_parfum_femme.jpg', 40, '2025-04-30 09:33:35', 2),
+(16, 'Parfum Luxe Femme', 'Un parfum de luxe avec des notes fruitées.', 89.99, 'parfum_luxe_femme.jpg', 20, '2025-04-30 09:33:35', 2),
+(17, 'Eau de Cologne Enfant', 'Un parfum doux et léger pour enfants.', 29.99, 'eau_de_cologne_enfant.jpg', 60, '2025-04-30 09:33:35', 3),
+(18, 'Parfum Fruité Enfant', 'Un parfum fruité et amusant pour enfants.', 34.99, 'parfum_fruite_enfant.jpg', 50, '2025-04-30 09:33:35', 3),
+(19, 'Coffret Cadeau Homme', 'Un coffret contenant un parfum et un gel douche.', 79.99, 'coffret_cadeau_homme.jpg', 25, '2025-04-30 09:33:35', 4),
+(20, 'Coffret Luxe Homme', 'Un coffret de luxe avec parfum et accessoires.', 119.99, 'coffret_luxe_homme.jpg', 15, '2025-04-30 09:33:35', 4),
+(21, 'Coffret Cadeau Femme', 'Un coffret contenant un parfum et une crème.', 89.99, 'coffret_cadeau_femme.jpg', 20, '2025-04-30 09:33:35', 5),
+(22, 'Coffret Luxe Femme', 'Un coffret de luxe avec parfum et accessoires.', 129.99, 'coffret_luxe_femme.jpg', 10, '2025-04-30 09:33:35', 5),
+(23, 'Coffret Parfum Enfant', 'Un coffret contenant un parfum et un jouet.', 49.99, 'coffret_parfum_enfant.jpg', 30, '2025-04-30 09:33:35', 6),
+(24, 'Coffret Cadeau Enfant', 'Un coffret amusant avec parfum et accessoires.', 59.99, 'coffret_cadeau_enfant.jpg', 25, '2025-04-30 09:33:35', 6);
 
 -- --------------------------------------------------------
 
@@ -113,7 +151,19 @@ CREATE TABLE IF NOT EXISTS `sous_categorie` (
   `id_categorie` int DEFAULT NULL,
   PRIMARY KEY (`id_sous_categorie`),
   KEY `id_categorie` (`id_categorie`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `sous_categorie`
+--
+
+INSERT INTO `sous_categorie` (`id_sous_categorie`, `nom`, `id_categorie`) VALUES
+(1, 'Hommes', 1),
+(2, 'Femmes', 1),
+(3, 'Enfants', 1),
+(4, 'Coffrets Hommes', 2),
+(5, 'Coffrets Femmes', 2),
+(6, 'Coffrets Enfants', 2);
 
 -- --------------------------------------------------------
 
@@ -132,7 +182,15 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `role` enum('client','admin') DEFAULT 'client',
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `prenom`, `email`, `mot_de_passe`, `adresse`, `role`) VALUES
+(3, 'HEUREUX', 'AXEL', 'axel-heureux@laplateforme.io', '$2y$10$vyq6rr7NsL9E.TBSVMjweOT5pfi8Yg9GrPA5InZrBv/FKHaE3yUbO', 'CHEMIN DE LA CROIX ISTRES 13800', 'client'),
+(4, 'MOGROVEJO', 'Justin', 'justin-morgrovejo@laplateforme.io', '$2y$10$Lvk9PzPMsC0WFUMW/QPELelr8bnmfJ5HypUKhqJoGUh1.QMDgAvs6', 'ISTRES 13800', 'client');
 
 --
 -- Contraintes pour les tables déchargées

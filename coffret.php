@@ -32,15 +32,10 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
     <a class="navbar-brand" href="index.php">
       <img src="assets/logo.png.png" alt="Senteurs du Monde" width="80">
     </a>
-    <form class="d-flex mx-auto search-bar">
-      <input class="form-control me-2" type="search" placeholder="Rechercher..." aria-label="Search">
-      <button class="btn btn-dark" type="submit">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search-heart" viewBox="0 0 16 16">
-        <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018"/>
-        <path d="M13 6.5a6.47 6.47 0 0 1-1.258 3.844q.06.044.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11"/>
-        </svg>
-      </button>
-    </form>
+    <form class="d-flex mx-auto search-bar position-relative" id="searchForm" method="GET" action="produit.php">
+      <input class="form-control me-2" type="text" id="searchInput" name="q" placeholder="Rechercher un produit..." autocomplete="off">
+      <div id="autocompleteList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+    </form> 
     <div class="d-flex align-items-center">
       <?php if($estConnecte): ?>
         <div class="dropdown">
@@ -68,38 +63,73 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
         <p class="text-center text-muted">Découvrez nos coffrets cadeaux pour toutes les occasions.</p>
     </div>
 
-    <!-- Liste des produits -->
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <?php
-            try {
-                // Récupérer les coffrets (catégorie "Coffrets")
-                $sql = "SELECT produit.nom AS produit_nom, produit.description, produit.prix, produit.image 
-                        FROM produit 
-                        INNER JOIN sous_categorie ON produit.id_sous_categorie = sous_categorie.id_sous_categorie 
-                        INNER JOIN categorie ON sous_categorie.id_categorie = categorie.id_categorie 
-                        WHERE categorie.nom = 'Coffrets'";
-                $stmt = $pdo->query($sql);
+    <div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <h5 class="fw-bold mb-3">Filtres</h5>
+            <div class="list-group">
+                <a href="coffret.php" class="list-group-item list-group-item-action">Tous les coffrets</a>
+                <a href="coffret.php?categorie=Coffrets Hommes" class="list-group-item list-group-item-action">Coffrets Hommes</a>
+                <a href="coffret.php?categorie=Coffrets Femmes" class="list-group-item list-group-item-action">Coffrets Femmes</a>
+                <a href="coffret.php?categorie=Coffrets Enfants" class="list-group-item list-group-item-action">Coffrets Enfants</a>
+            </div>
+        </div>
 
-                while ($produit = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    echo '<div class="col">';
-                    echo '  <div class="card h-100">';
-                    echo '    <img src="assets/' . htmlspecialchars($produit['image']) . '" class="card-img-top" alt="' . htmlspecialchars($produit['produit_nom']) . '">';
-                    echo '    <div class="card-body">';
-                    echo '      <h5 class="card-title">' . htmlspecialchars($produit['produit_nom']) . '</h5>';
-                    echo '      <p class="card-text">' . htmlspecialchars($produit['description']) . '</p>';
-                    echo '      <p class="card-text fw-bold">' . number_format($produit['prix'], 2, ',', ' ') . ' €</p>';
-                    echo '      <a href="#" class="btn btn-primary">Ajouter au panier</a>';
-                    echo '    </div>';
-                    echo '  </div>';
-                    echo '</div>';
+        <!-- Liste des produits -->
+        <div class="col-md-9">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <?php
+                try {
+                    // Vérifier si un filtre de catégorie est appliqué
+                    $categorie = isset($_GET['categorie']) ? $_GET['categorie'] : null;
+
+                    // Construire la requête SQL en fonction du filtre
+                    $sql = "SELECT produit.nom AS produit_nom, produit.description, produit.prix, produit.image 
+                            FROM produit 
+                            INNER JOIN sous_categorie ON produit.id_sous_categorie = sous_categorie.id_sous_categorie 
+                            INNER JOIN categorie ON sous_categorie.id_categorie = categorie.id_categorie 
+                            WHERE categorie.nom = 'Coffrets'";
+
+                    if ($categorie) {
+                        $sql .= " AND sous_categorie.nom = :categorie";
+                    }
+
+                    $stmt = $pdo->prepare($sql);
+
+                    // Lier le paramètre si un filtre est appliqué
+                    if ($categorie) {
+                        $stmt->bindParam(':categorie', $categorie, PDO::PARAM_STR);
+                    }
+
+                    $stmt->execute();
+
+                    // Afficher les produits
+                    if ($stmt->rowCount() > 0) {
+                        while ($produit = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            echo '<div class="col">';
+                            echo '  <div class="card h-100">';
+                            echo '    <img src="assets/' . htmlspecialchars($produit['image']) . '" class="card-img-top" alt="' . htmlspecialchars($produit['produit_nom']) . '">';
+                            echo '    <div class="card-body">';
+                            echo '      <h5 class="card-title">' . htmlspecialchars($produit['produit_nom']) . '</h5>';
+                            echo '      <p class="card-text">' . htmlspecialchars($produit['description']) . '</p>';
+                            echo '      <p class="card-text fw-bold">' . number_format($produit['prix'], 2, ',', ' ') . ' €</p>';
+                            echo '      <a href="#" class="btn btn-primary">Ajouter au panier</a>';
+                            echo '    </div>';
+                            echo '  </div>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<div class="col-12"><p class="text-center text-muted">Aucun produit trouvé pour cette catégorie.</p></div>';
+                    }
+                } catch (PDOException $e) {
+                    echo '<div class="alert alert-danger">Erreur lors de la récupération des produits : ' . $e->getMessage() . '</div>';
                 }
-            } catch (PDOException $e) {
-                echo '<div class="alert alert-danger">Erreur lors de la récupération des produits : ' . $e->getMessage() . '</div>';
-            }
-            ?>
+                ?>
+            </div>
         </div>
     </div>
+</div>
 
     <!-- Footer -->
     <footer class="footer-custom text-white py-5 mt-5">
@@ -135,5 +165,51 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const autocompleteList = document.getElementById("autocompleteList");
+
+    searchInput.addEventListener("input", function () {
+        const query = searchInput.value.trim();
+
+        if (query.length > 1) {
+            fetch(`search.php?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    autocompleteList.innerHTML = ""; // Vider la liste précédente
+
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const listItem = document.createElement("a");
+                            listItem.href = `produit.php?id_produit=${item.id_produit}`;
+                            listItem.className = "list-group-item list-group-item-action";
+                            listItem.textContent = item.nom;
+                            autocompleteList.appendChild(listItem);
+                        });
+                    } else {
+                        const noResult = document.createElement("div");
+                        noResult.className = "list-group-item text-muted";
+                        noResult.textContent = "Aucun produit trouvé.";
+                        autocompleteList.appendChild(noResult);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la recherche :", error);
+                });
+        } else {
+            autocompleteList.innerHTML = ""; // Vider la liste si la recherche est vide
+        }
+    });
+
+    // Cacher la liste d'autocomplétion si on clique en dehors
+    document.addEventListener("click", function (e) {
+        if (!autocompleteList.contains(e.target) && e.target !== searchInput) {
+            autocompleteList.innerHTML = "";
+        }
+    });
+});
+</script>
 </body>
 </html>
