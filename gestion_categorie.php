@@ -32,6 +32,91 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gérer les Catégories</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Style global */
+        body {
+            background-color: #f4f5f7; /* Gris clair */
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #ffffff; /* Barre de navigation blanche */
+            color: #333;
+        }
+
+        .navbar-brand img {
+            width: 80px;
+        }
+
+        .navbar .navbar-nav .nav-link {
+            color: #333;
+        }
+
+        .navbar .navbar-nav .nav-link:hover {
+            color: #FF9900;
+        }
+
+        /* Table */
+        .table {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table thead {
+            background-color: #2C3E50;
+            color: #fff;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Boutons */
+        .btn-success {
+            background-color:rgb(15, 25, 85);
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color:rgba(5, 11, 68, 0.74);
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Titre principal */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+        }
+    </style>
 </head>
 <!-- Header -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
@@ -61,6 +146,7 @@ try {
     </div>
   </div>
 </nav>
+
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Gérer les Catégories</h1>
