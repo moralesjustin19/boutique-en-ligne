@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
     header("Location: connexion.php");
-    exit(); zeifhizef
+    exit();
 }
 
 // Inclure la configuration de la base de données
