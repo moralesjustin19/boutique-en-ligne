@@ -11,68 +11,37 @@ $email_err = $mot_de_passe_err = $login_err = "";
 
 // Traitement du formulaire lorsqu'il est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Vérifier si l'email est vide
-    if (empty(trim($_POST["email"]))) {
-        $email_err = "Veuillez entrer votre email.";
-    } else {
-        $email = trim($_POST["email"]);
-    }
+    $email = htmlspecialchars($_POST['email']);
+    $password = htmlspecialchars($_POST['password']);
 
-    // Vérifier si le mot de passe est vide
-    if (empty(trim($_POST["mot_de_passe"]))) {
-        $mot_de_passe_err = "Veuillez entrer votre mot de passe.";
-    } else {
-        $mot_de_passe = trim($_POST["mot_de_passe"]);
-    }
+    try {
+        $sql = "SELECT id_utilisateur, email, role, mot_de_passe FROM utilisateur WHERE email = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Valider les identifiants
-    if (empty($email_err) && empty($mot_de_passe_err)) {
-        // Préparer une requête SQL
-        $sql = "SELECT id_utilisateur, email, mot_de_passe FROM utilisateur WHERE email = :email";
-
-        if ($stmt = $pdo->prepare($sql)) {
-            // Lier les variables à la requête préparée
-            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-
-            // Exécuter la requête
-            if ($stmt->execute()) {
-                // Vérifier si l'email existe
-                if ($stmt->rowCount() == 1) {
-                    if ($row = $stmt->fetch()) {
-                        $id_utilisateur = $row["id_utilisateur"];
-                        $email = $row["email"];
-                        $hashed_mot_de_passe = $row["mot_de_passe"];
-
-                        if (password_verify($mot_de_passe, $hashed_mot_de_passe)) {
-                            // Mot de passe correct, démarrer une session
-                            session_start();
-
-                            // Stocker les données dans la session
-                            $_SESSION["connecte"] = true;
-                            $_SESSION["id_utilisateur"] = $id_utilisateur;
-                            $_SESSION["email"] = $email;
-
-                            // Rediriger vers la page de profil
-                            header("location: index.php");
-                            exit;
-                        } else {
-                            $login_err = "Email ou mot de passe incorrect.";
-                        }
-                    }
-                } else {
-                    $login_err = "Email ou mot de passe incorrect.";
-                }
-            } else {
-                echo "Une erreur est survenue. Veuillez réessayer plus tard.";
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            // Démarrer la session
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
             }
 
-            // Fermer la requête
-            unset($stmt);
-        }
-    }
+            // Définir les variables de session
+            $_SESSION['connecte'] = true;
+            $_SESSION['id_utilisateur'] = $user['id_utilisateur'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role']; // Assurez-vous que le rôle est défini ici
 
-    // Fermer la connexion
-    unset($pdo);
+            // Rediriger vers la page d'accueil
+            header("Location: index.php");
+            exit();
+        } else {
+            $login_err = "Email ou mot de passe incorrect.";
+        }
+    } catch (PDOException $e) {
+        die("Erreur : " . $e->getMessage());
+    }
 }
 ?>
 
@@ -104,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>    
                     <div class="form-group mb-3">
                         <label>Mot de passe</label>
-                        <input type="password" name="mot_de_passe" class="form-control <?php echo (!empty($mot_de_passe_err)) ? 'is-invalid' : ''; ?>">
+                        <input type="password" name="password" class="form-control <?php echo (!empty($mot_de_passe_err)) ? 'is-invalid' : ''; ?>">
                         <span class="invalid-feedback"><?php echo $mot_de_passe_err; ?></span>
                     </div>
                     <div class="form-group">

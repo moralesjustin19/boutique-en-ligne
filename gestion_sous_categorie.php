@@ -15,22 +15,15 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 // Inclure la configuration de la base de données
 require_once "config.php";
 
-// Récupérer les informations de l'utilisateur
-$userId = $_SESSION['id_utilisateur']; // Assurez-vous que l'ID utilisateur est stocké dans la session
+// Récupérer toutes les sous-catégories
 try {
-    $sql = "SELECT nom, prenom, email, adresse FROM utilisateur WHERE id_utilisateur = :id_utilisateur";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        echo "Utilisateur introuvable.";
-        exit();
-    }
+    $sql = "SELECT sous_categorie.id_sous_categorie, sous_categorie.nom AS sous_categorie_nom, categorie.nom AS categorie_nom 
+            FROM sous_categorie 
+            INNER JOIN categorie ON sous_categorie.id_categorie = categorie.id_categorie";
+    $stmt = $pdo->query($sql);
+    $sousCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    echo "Erreur lors de la récupération des informations utilisateur : " . $e->getMessage();
-    exit();
+    die("Erreur lors de la récupération des sous-catégories : " . $e->getMessage());
 }
 ?>
 
@@ -39,26 +32,9 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Senteurs du Monde</title>
+    <title>Gérer les Sous-Catégories</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .content {
-            flex: 1;
-        }
-        .footer-custom {
-            background-color: #232F3E;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-        }
-    </style>
 </head>
-<body>
 <!-- Header -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
   <div class="container-fluid">
@@ -84,36 +60,37 @@ try {
       <?php else: ?>
         <a href="connexion.php" class="me-3 text-dark text-decoration-none"><i class="bi bi-person"></i> Connexion</a>
       <?php endif; ?>
-      <a href="panier.php" class="text-dark text-decoration-none"><i class="bi bi-basket"></i> Mon Panier</a>
     </div>
   </div>
 </nav>
-
-    <!-- Contenu principal -->
-    <div class="container content mt-5">
-        <h1 class="text-center mb-4">Mon Profil</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Informations personnelles</h5>
-                        <p><strong>Nom :</strong> <?php echo htmlspecialchars($user['nom']); ?></p>
-                        <p><strong>Prénom :</strong> <?php echo htmlspecialchars($user['prenom']); ?></p>
-                        <p><strong>Email :</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-                        <p><strong>Adresse :</strong> <?php echo htmlspecialchars($user['adresse']); ?></p>
-                        <a href="modifier_profil.php" class="btn btn-primary">Modifier mes informations</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Gérer les Sous-Catégories</h1>
+        <a href="ajouter_sous_categorie.php" class="btn btn-success mb-3">Ajouter une Sous-Catégorie</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom de la Sous-Catégorie</th>
+                    <th>Catégorie</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($sousCategories as $sousCategorie): ?>
+                    <tr>
+                        <td><?php echo $sousCategorie['id_sous_categorie']; ?></td>
+                        <td><?php echo htmlspecialchars($sousCategorie['sous_categorie_nom']); ?></td>
+                        <td><?php echo htmlspecialchars($sousCategorie['categorie_nom']); ?></td>
+                        <td>
+                            <a href="modifier_sous_categorie.php?id=<?php echo $sousCategorie['id_sous_categorie']; ?>" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="supprimer_sous_categorie.php?id=<?php echo $sousCategorie['id_sous_categorie']; ?>" class="btn btn-danger btn-sm">Supprimer</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer-custom mt-auto">
-        <div class="container">
-            <p>&copy; <?= date('Y') ?> Senteurs du Monde. Tous droits réservés.</p>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
