@@ -93,11 +93,7 @@ try {
                         Date : <?php echo date('d/m/Y H:i', strtotime($commande['date_commande'])); ?>
                     </div>
                     <div class="card-body">
-                        <p><strong>Total :</strong> 
-                            <?php 
-                            echo isset($commande['total']) ? number_format($commande['total'], 2, ',', ' ') . ' €' : 'Non disponible'; 
-                            ?>
-                        </p>
+
 
                         <!-- Récupérer les détails de la commande -->
                         <?php
