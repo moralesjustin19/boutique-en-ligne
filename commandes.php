@@ -122,9 +122,15 @@ try {
   </div>
 </nav>
 
-<!-- Contenu -->
-<div class="container mt-5">
-  <h1 class="text-center mb-4">Mes Commandes</h1>
+        <?php if (count($commandes) > 0): ?>
+            <?php foreach ($commandes as $commande): ?>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <strong>Commande #<?php echo $commande['id_commande']; ?></strong> - 
+                        Date : <?php echo date('d/m/Y H:i', strtotime($commande['date_commande'])); ?>
+                    </div>
+                    <div class="card-body">
+
 
   <?php if (count($commandes) > 0): ?>
     <?php foreach ($commandes as $commande): ?>

@@ -99,13 +99,13 @@ if (isset($_GET['q'])) {
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active text-center">
-      <img src="assets/sauvage.jpg" class="d-block w-100" alt="Parfum 1">
+      <img src="assets/banner1.jpg" class="d-block w-100" alt="Parfum 1">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/eros.jpg" class="d-block w-100" alt="Parfum 2">
+      <img src="assets/banner2.jpg" class="d-block w-100" alt="Parfum 2">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/scandal.jpg" class="d-block w-100" alt="Parfum 3">
+      <img src="assets/banner3.jpg" class="d-block w-100" alt="Parfum 3">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">

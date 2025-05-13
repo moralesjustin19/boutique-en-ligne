@@ -10,6 +10,57 @@ $idUtilisateur = $_SESSION['id_utilisateur'] ?? null; // Récupérer l'ID de l'u
 // Variables
 $totalPanier = 0;
 $produits = [];
+
+// Validation du panier
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['etape']) && $_GET['etape'] === 'paiement') {
+    if (!$estConnecte) {
+        header("Location: connexion.php");
+        exit();
+    }
+
+    if (!empty($_SESSION['panier'])) {
+        try {
+            // Insérer la commande dans la table `commande`
+            $sqlCommande = "INSERT INTO commande (id_utilisateur, statut) VALUES (:id_utilisateur, :statut)";
+            $stmtCommande = $pdo->prepare($sqlCommande);
+            $stmtCommande->bindValue(':id_utilisateur', $idUtilisateur, PDO::PARAM_INT);
+            $stmtCommande->bindValue(':statut', 'en attente', PDO::PARAM_STR);
+            $stmtCommande->execute();
+
+            // Récupérer l'ID de la commande insérée
+            $idCommande = $pdo->lastInsertId();
+
+            // Insérer les détails de la commande dans la table `details_commande`
+            $sqlDetails = "INSERT INTO detail_commande (id_commande, id_produit, quantite, prix_unitaire) 
+                           VALUES (:id_commande, :id_produit, :quantite, :prix_unitaire)";
+            $stmtDetails = $pdo->prepare($sqlDetails);
+
+            foreach ($_SESSION['panier'] as $idProduit => $quantite) {
+                $stmtProduit = $pdo->prepare("SELECT prix FROM produit WHERE id_produit = :id_produit");
+                $stmtProduit->execute([':id_produit' => $idProduit]);
+                $produit = $stmtProduit->fetch(PDO::FETCH_ASSOC);
+
+                if ($produit) {
+                    $stmtDetails->bindValue(':id_commande', $idCommande, PDO::PARAM_INT);
+                    $stmtDetails->bindValue(':id_produit', $idProduit, PDO::PARAM_INT);
+                    $stmtDetails->bindValue(':quantite', $quantite, PDO::PARAM_INT);
+                    $stmtDetails->bindValue(':prix_unitaire', $produit['prix'], PDO::PARAM_STR);
+                    $stmtDetails->execute();
+                }
+            }
+
+            // Vider le panier
+            $_SESSION['panier'] = [];
+
+            // Rediriger vers la page des commandes avec un message de succès
+            $_SESSION['message'] = "Votre commande a été validée avec succès.";
+            header("Location: commandes.php");
+            exit();
+        } catch (PDOException $e) {
+            die("Erreur lors de la validation de la commande : " . $e->getMessage());
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -270,58 +321,6 @@ $produits = [];
             </div>
         </form>
     <?php endif; ?>
-
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['etape']) && $_GET['etape'] === 'paiement') {
-        if (!$estConnecte) {
-            header("Location: connexion.php");
-            exit();
-        }
-
-        if (!empty($produits)) {
-            try {
-                // Insérer la commande dans la table `commande`
-                $sqlCommande = "INSERT INTO commande (id_utilisateur, statut) VALUES (:id_utilisateur, :statut)";
-                $stmtCommande = $pdo->prepare($sqlCommande);
-                $stmtCommande->bindValue(':id_utilisateur', $idUtilisateur, PDO::PARAM_INT);
-                $stmtCommande->bindValue(':statut', 'en attente', PDO::PARAM_STR);
-                $stmtCommande->execute();
-
-                // Récupérer l'ID de la commande insérée
-                $idCommande = $pdo->lastInsertId();
-
-                // Insérer les détails de la commande dans la table `details_commande`
-                $sqlDetails = "INSERT INTO detail_commande (id_commande, id_produit, quantite, prix_unitaire) 
-                               VALUES (:id_commande, :id_produit, :quantite, :prix_unitaire)";
-                $stmtDetails = $pdo->prepare($sqlDetails);
-
-                foreach ($_SESSION['panier'] as $idProduit => $quantite) {
-                    $stmtProduit = $pdo->prepare("SELECT prix FROM produit WHERE id_produit = :id_produit");
-                    $stmtProduit->execute([':id_produit' => $idProduit]);
-                    $produit = $stmtProduit->fetch(PDO::FETCH_ASSOC);
-
-                    if ($produit) {
-                        $stmtDetails->bindValue(':id_commande', $idCommande, PDO::PARAM_INT);
-                        $stmtDetails->bindValue(':id_produit', $idProduit, PDO::PARAM_INT);
-                        $stmtDetails->bindValue(':quantite', $quantite, PDO::PARAM_INT);
-                        $stmtDetails->bindValue(':prix_unitaire', $produit['prix'], PDO::PARAM_STR);
-                        $stmtDetails->execute();
-                    }
-                }
-
-                // Vider le panier
-                $_SESSION['panier'] = [];
-
-                // Rediriger vers la page des commandes avec un message de succès
-                $_SESSION['message'] = "Votre commande a été validée avec succès.";
-                header("Location: commandes.php");
-                exit();
-            } catch (PDOException $e) {
-                die("Erreur lors de la validation de la commande : " . $e->getMessage());
-            }
-        }
-    }
-    ?>
 </div>
 
 <!-- Footer -->
