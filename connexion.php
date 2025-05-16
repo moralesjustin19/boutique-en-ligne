@@ -3,7 +3,7 @@
 session_start();
 
 // Inclure le fichier de configuration pour la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Initialiser les variables
 $email = $mot_de_passe = "";

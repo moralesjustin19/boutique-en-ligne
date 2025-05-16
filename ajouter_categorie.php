@@ -19,7 +19,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 }
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Ajouter une catégorie
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

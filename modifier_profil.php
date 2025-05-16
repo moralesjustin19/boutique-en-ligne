@@ -13,7 +13,7 @@ if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
 }
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Récupérer les informations de l'utilisateur
 $userId = $_SESSION['id_utilisateur']; // Assurez-vous que l'ID utilisateur est stocké dans la session

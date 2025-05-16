@@ -13,7 +13,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 // filepath: c:\wamp64\www\boutique-en-ligne\search.php
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Récupérer toutes les catégories
 try {

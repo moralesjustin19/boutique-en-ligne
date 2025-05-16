@@ -2,7 +2,7 @@
 // filepath: c:\wamp64\www\boutique-en-ligne\search.php
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 if (isset($_GET['q'])) {
     $searchTerm = htmlspecialchars($_GET['q']); // Échapper les caractères spéciaux pour éviter les injections XSS

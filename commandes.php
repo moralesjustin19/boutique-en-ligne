@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
 $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 
-require_once "config.php";
+require_once "config/config.php";
 $idUtilisateur = $_SESSION['id_utilisateur'];
 
 try {
@@ -30,6 +30,7 @@ try {
   <!-- Bootstrap CSS + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/stylesheet.css">
 
   <style>
     body {
@@ -122,61 +123,50 @@ try {
   </div>
 </nav>
 
-        <?php if (count($commandes) > 0): ?>
-            <?php foreach ($commandes as $commande): ?>
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <strong>Commande #<?php echo $commande['id_commande']; ?></strong> - 
-                        Date : <?php echo date('d/m/Y H:i', strtotime($commande['date_commande'])); ?>
-                    </div>
-                    <div class="card-body">
-
-
-  <?php if (count($commandes) > 0): ?>
-    <?php foreach ($commandes as $commande): ?>
-      <div class="card mb-4 shadow">
-        <div class="card-header">
-          Commande #<?php echo $commande['id_commande']; ?> — 
-          Date : <?php echo date('d/m/Y H:i', strtotime($commande['date_commande'])); ?>
-        </div>
-        <div class="card-body">
-          <p><strong>Total :</strong> 
-            <?php echo isset($commande['total']) ? number_format($commande['total'], 2, ',', ' ') . ' €' : 'Non disponible'; ?>
-          </p>
-
-          <!-- Détails de commande -->
-          <?php
-          try {
-              $sqlDetails = "SELECT d.quantite, d.prix_unitaire, p.nom 
-                            FROM detail_commande d
-                            INNER JOIN produit p ON d.id_produit = p.id_produit
-                            WHERE d.id_commande = :id_commande";
-              $stmtDetails = $pdo->prepare($sqlDetails);
-              $stmtDetails->bindValue(':id_commande', $commande['id_commande'], PDO::PARAM_INT);
-              $stmtDetails->execute();
-              $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
-          } catch (PDOException $e) {
-              die("Erreur lors de la récupération des détails de la commande : " . $e->getMessage());
-          }
-          ?>
-
-          <h5>Détails de la commande :</h5>
-          <ul>
-            <?php foreach ($details as $detail): ?>
-              <li>
-                <?php echo htmlspecialchars($detail['nom']); ?> —
-                Quantité : <?php echo $detail['quantite']; ?> —
-                Prix unitaire : <?php echo number_format($detail['prix_unitaire'], 2, ',', ' '); ?> €
-              </li>
-            <?php endforeach; ?>
-          </ul>
-        </div>
+<?php if (count($commandes) > 0): ?>
+  <?php foreach ($commandes as $commande): ?>
+    <div class="card mb-4 shadow">
+      <div class="card-header">
+        Commande #<?php echo $commande['id_commande']; ?> — 
+        Date : <?php echo date('d/m/Y H:i', strtotime($commande['date_commande'])); ?>
       </div>
-    <?php endforeach; ?>
-  <?php else: ?>
-    <p class="text-center">Vous n'avez pas encore passé de commande.</p>
-  <?php endif; ?>
-</div>
+      <div class="card-body">
+        <p><strong>Total :</strong> 
+          <?php echo isset($commande['total']) ? number_format($commande['total'], 2, ',', ' ') . ' €' : 'Non disponible'; ?>
+        </p>
+
+        <!-- Détails de commande -->
+        <?php
+        try {
+            $sqlDetails = "SELECT d.quantite, d.prix_unitaire, p.nom 
+                          FROM detail_commande d
+                          INNER JOIN produit p ON d.id_produit = p.id_produit
+                          WHERE d.id_commande = :id_commande";
+            $stmtDetails = $pdo->prepare($sqlDetails);
+            $stmtDetails->bindValue(':id_commande', $commande['id_commande'], PDO::PARAM_INT);
+            $stmtDetails->execute();
+            $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Erreur lors de la récupération des détails de la commande : " . $e->getMessage());
+        }
+        ?>
+
+        <h5>Détails de la commande :</h5>
+        <ul>
+          <?php foreach ($details as $detail): ?>
+            <li>
+              <?php echo htmlspecialchars($detail['nom']); ?> —
+              Quantité : <?php echo $detail['quantite']; ?> —
+              Prix unitaire : <?php echo number_format($detail['prix_unitaire'], 2, ',', ' '); ?> €
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+  <?php endforeach; ?>
+<?php else: ?>
+  <p class="text-center">Vous n'avez pas encore passé de commande.</p>
+<?php endif; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

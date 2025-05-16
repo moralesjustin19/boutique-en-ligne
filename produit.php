@@ -2,7 +2,7 @@
 // filepath: c:\wamp64\www\boutique-en-ligne\produit.php
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Démarrer la session uniquement si elle n'est pas déjà active
 if (session_status() === PHP_SESSION_NONE) {

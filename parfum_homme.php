@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Inclure le fichier de configuration pour la connexion à la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Vérifier si l'utilisateur est connecté
 $estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
@@ -23,7 +23,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="assets/css/stylesheet.css">
 </head>
 <body>
 <!-- Header -->

@@ -13,7 +13,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 // filepath: c:\wamp64\www\boutique-en-ligne\search.php
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 if (isset($_GET['q'])) {
     $searchTerm = htmlspecialchars($_GET['q']); // Échapper les caractères spéciaux pour éviter les injections XSS
@@ -45,7 +45,7 @@ if (isset($_GET['q'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="assets/css/stylesheet.css">
 </head>
 <body>
 
@@ -53,7 +53,7 @@ if (isset($_GET['q'])) {
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
   <div class="container-fluid">
     <a class="navbar-brand" href="index.php">
-      <img src="assets/logo.png.png" alt="Senteurs du Monde" width="80">
+      <img src="assets/images/logo.png.png" alt="Senteurs du Monde" width="80">
     </a>
     <form class="d-flex mx-auto search-bar position-relative" id="searchForm" method="GET" action="search.php">
         <input class="form-control me-2" type="text" id="searchInput" name="q" placeholder="Rechercher un produit..." autocomplete="off">
@@ -99,13 +99,13 @@ if (isset($_GET['q'])) {
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active text-center">
-      <img src="assets/banner1.jpg" class="d-block w-100" alt="Parfum 1">
+      <img src="assets/images/banner1.jpg" class="d-block w-100" alt="Parfum 1">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/banner2.jpg" class="d-block w-100" alt="Parfum 2">
+      <img src="assets/images/banner2.jpg" class="d-block w-100" alt="Parfum 2">
     </div>
     <div class="carousel-item text-center">
-      <img src="assets/banner3.jpg" class="d-block w-100" alt="Parfum 3">
+      <img src="assets/images/banner3.jpg" class="d-block w-100" alt="Parfum 3">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -137,7 +137,7 @@ if (isset($_GET['q'])) {
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <?php
     // Connexion à la base de données
-    require_once "config.php";
+    require_once "config/config.php";
 
     try {
         // Récupérer les produits populaires (par exemple, les 6 premiers produits)
@@ -170,7 +170,7 @@ if (isset($_GET['q'])) {
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <?php
     // Connexion à la base de données
-    require_once "config.php";
+    require_once "config/config.php";
 
     try {
         // Récupérer tous les produits

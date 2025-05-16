@@ -13,7 +13,7 @@ $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 // filepath: c:\wamp64\www\boutique-en-ligne\search.php
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 if (isset($_GET['q'])) {
     $searchTerm = htmlspecialchars($_GET['q']); // Échapper les caractères spéciaux pour éviter les injections XSS
@@ -42,6 +42,7 @@ if (isset($_GET['q'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/stylesheet.css">
 </head>
 <body>
 <!-- Header -->

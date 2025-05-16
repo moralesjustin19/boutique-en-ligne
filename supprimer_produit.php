@@ -13,7 +13,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 }
 
 // Inclure la configuration de la base de données
-require_once "config.php";
+require_once "config/config.php";
 
 // Vérifier si un ID de produit est passé en paramètre
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

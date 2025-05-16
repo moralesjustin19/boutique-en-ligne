@@ -8,7 +8,7 @@ $estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
 $nomUtilisateur = $estConnecte ? $_SESSION['email'] : '';
 
 // Connexion DB
-require_once "config.php";
+require_once "config/config.php";
 
 // Récupération des produits
 try {

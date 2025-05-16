@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "config.php";
+require_once "config/config.php";
 
 // Authentification
 $estConnecte = isset($_SESSION['connecte']) && $_SESSION['connecte'] === true;
@@ -286,8 +286,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['etape']) && $_GET['eta
             <div class="chip"></div>
             <div class="card-number-display">0000 0000 0000 0000</div>
             <div class="card-icons">
-                <img src="assets/visa.png" alt="Visa">
-                <img src="assets/Mastercard-logo.svg" alt="MasterCard">
+                <img src="assets/images/visa.png" alt="Visa">
+                <img src="assets/images/Mastercard-logo.svg" alt="MasterCard">
             </div>
         </div>
 
